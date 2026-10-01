@@ -1,25 +1,41 @@
 # syntax=docker/dockerfile:1
 
-FROM docker.io/library/python:3.14-alpine3.22
+# Keep the container toolchain aligned with Mise. Renovate updates both.
 
-ENV PACKAGES_DIR=/packages
+# ---- Go build -------------------------------------------------------------
+FROM --platform=$BUILDPLATFORM golang:1.27.1-alpine AS builder
 
-USER root
+ARG TARGETOS
+ARG TARGETARCH
+ARG VERSION=dev
+ARG COMMIT=unknown
+ARG DATE=unknown
 
-COPY requirements.txt pyproject.toml updateuserinfo.py /app/
-WORKDIR /app
+WORKDIR /workspace
 
-RUN \
-	pip3 install --no-cache-dir -r \
-		requirements.txt \
-	&& \
-	pip3 install --no-cache-dir \
-		. \
-	&& \
-	mkdir -p /packages \
-	&& \
-	rm -rf /tmp/*
+# Cache module downloads before copying source.
+COPY go.mod go.sum ./
+RUN go mod download
+RUN go install github.com/google/go-licenses/v2@v2.0.1
 
-USER nobody:nogroup
+COPY cmd/ cmd/
+COPY internal/ internal/
 
-CMD ["updateuserinfo"]
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} \
+    go-licenses save ./cmd/jamf-user-sync --save_path third_party_licenses --ignore github.com/woodleighschool/jamf-user-sync --force
+
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} \
+    go build -trimpath \
+    -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.date=${DATE}" \
+    -o jamf-user-sync ./cmd/jamf-user-sync
+
+# ---- Runtime --------------------------------------------------------------
+FROM gcr.io/distroless/static:nonroot
+
+WORKDIR /
+COPY LICENSE /LICENSE
+COPY --from=builder /workspace/third_party_licenses /third_party_licenses
+COPY --from=builder /usr/local/go/LICENSE /third_party_licenses/go/LICENSE
+COPY --from=builder /workspace/jamf-user-sync /jamf-user-sync
+USER 65532:65532
+ENTRYPOINT ["/jamf-user-sync"]
