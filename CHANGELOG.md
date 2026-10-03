@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.1](https://github.com/woodleighschool/jamf-user-sync/compare/3.0.0...v3.0.1) (2026-10-03)
+
+
+### Bug Fixes
+
+* **go:** update module resty.dev/v3 (v3.0.0-rc.3 → v3.0.0-rc.4) ([#12](https://github.com/woodleighschool/jamf-user-sync/issues/12)) ([27e8136](https://github.com/woodleighschool/jamf-user-sync/commit/27e8136003ffd42cb2e572c57adac4a13d022c2f))
+* skip missing directory accounts during user sync ([ec30117](https://github.com/woodleighschool/jamf-user-sync/commit/ec30117a3e7b02dae11acfa2a784225af65a4510))
+
 ## [3.0.0](https://github.com/woodleighschool/jamf-user-sync/compare/2.0.9...3.0.0) (2026-10-01)
 
 
