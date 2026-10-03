@@ -30,9 +30,9 @@ jamf-user-sync --version
 
 Each invocation validates configuration, fetches all managed-device inventory pages, reconciles user fields and exits. Kubernetes CronJobs in `wood-ops` own scheduling, retries and concurrency. `--dry-run` overrides `DRY_RUN`; `--dry-run=false` explicitly enables writes.
 
-Building mappings are Senior Campus → `1`, Penbank → `2`, Minimbah → `3`. Department IDs retain the existing year-level and staff mappings. Unknown AD values map to `-1`. Accounts with the disabled `userAccountControl` bit (`0x2`) map to building `4` and department `26`. Devices without an assigned username are skipped. Missing, ambiguous or malformed AD accounts fail that device without changing its Jamf record.
+Building mappings are Senior Campus → `1`, Penbank → `2`, Minimbah → `3`. Department IDs retain the existing year-level and staff mappings. Unknown AD values map to `-1`. Accounts with the disabled `userAccountControl` bit (`0x2`) map to building `4` and department `26`. Devices without an assigned username or a matching AD account are skipped without changing their Jamf record. Ambiguous or malformed AD accounts fail that device.
 
-Only differing user fields trigger an update, and unrelated inventory fields remain untouched. A JSON report on stdout counts devices, unassigned records, unchanged records, proposed/actual updates and lookup/update failures. Per-device failures on stderr include device kind, inventory ID and failed operation without user names, email addresses, credentials or API response bodies. Inventory/startup failures, cancellation and any failed device return a nonzero exit status; other devices continue after individual lookup or update failures.
+Only differing user fields trigger an update, and unrelated inventory fields remain untouched. A JSON report on stdout counts devices, unassigned records, missing accounts, unchanged records, proposed/actual updates and lookup/update failures. Per-device failures on stderr include device kind, inventory ID and failed operation without user names, email addresses, credentials or API response bodies. Inventory/startup failures, cancellation and any failed device return a nonzero exit status; other devices continue after individual lookup or update failures.
 
 ## 🛠️ Development
 

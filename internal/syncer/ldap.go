@@ -12,6 +12,9 @@ import (
 	"github.com/woodleighschool/jamf-user-sync/internal/config"
 )
 
+// ErrUserNotFound means the assigned Jamf username has no directory account.
+var ErrUserNotFound = errors.New("directory: account not found")
+
 type LDAP struct {
 	conn       *ldap.Conn
 	baseDN     string
@@ -69,6 +72,13 @@ func (d *LDAP) Lookup(ctx context.Context, username string) (User, error) {
 	}
 	if response.Err() != nil {
 		return User{}, errors.New("directory: account search failed")
+	}
+	return uniqueUser(entries)
+}
+
+func uniqueUser(entries []*ldap.Entry) (User, error) {
+	if len(entries) == 0 {
+		return User{}, ErrUserNotFound
 	}
 	if len(entries) != 1 {
 		return User{}, errors.New("directory: account search must return exactly one user")

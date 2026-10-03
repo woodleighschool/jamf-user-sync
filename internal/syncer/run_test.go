@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"strings"
 	"testing"
@@ -96,5 +97,23 @@ func TestRunStopsOnInventoryFailureOrCancellation(t *testing.T) {
 	inventory = &fakeInventory{devices: []Device{{ID: "1", User: User{Username: "student"}}}}
 	if _, err := Run(ctx, inventory, fakeDirectory{}, false, logger); !errors.Is(err, context.Canceled) {
 		t.Fatalf("Run() cancellation = %v", err)
+	}
+}
+
+type missingDirectory struct{}
+
+func (missingDirectory) Lookup(context.Context, string) (User, error) {
+	return User{}, fmt.Errorf("lookup: %w", ErrUserNotFound)
+}
+
+func TestRunSkipsMissingAccountsWithoutChangingJamf(t *testing.T) {
+	for _, dryRun := range []bool{false, true} {
+		t.Run(fmt.Sprint(dryRun), func(t *testing.T) {
+			inventory := &fakeInventory{devices: []Device{{ID: "1", Kind: "macos", User: User{Username: "former-student", DepartmentID: "6"}}}}
+			summary, err := Run(t.Context(), inventory, missingDirectory{}, dryRun, slog.New(slog.DiscardHandler))
+			if err != nil || summary.MissingUsers != 1 || summary.LookupFailed != 0 || summary.WouldUpdate != 0 || len(inventory.updates) != 0 {
+				t.Fatalf("Run()=%+v, %v; updates=%+v", summary, err, inventory.updates)
+			}
+		})
 	}
 }

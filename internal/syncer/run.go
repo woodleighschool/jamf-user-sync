@@ -26,6 +26,7 @@ type Directory interface {
 type Summary struct {
 	Devices      int  `json:"devices"`
 	Unassigned   int  `json:"unassigned"`
+	MissingUsers int  `json:"missing_users"`
 	Unchanged    int  `json:"unchanged"`
 	WouldUpdate  int  `json:"would_update"`
 	Updated      int  `json:"updated"`
@@ -54,6 +55,10 @@ func Run(ctx context.Context, inventory Inventory, directory Directory, dryRun b
 		if err != nil {
 			if ctx.Err() != nil {
 				return summary, fmt.Errorf("sync: %w", ctx.Err())
+			}
+			if errors.Is(err, ErrUserNotFound) {
+				summary.MissingUsers++
+				continue
 			}
 			summary.LookupFailed++
 			logger.ErrorContext(ctx, "device synchronization failed", "device_kind", device.Kind, "device_id", device.ID, "operation", "directory_lookup", "error", err)
