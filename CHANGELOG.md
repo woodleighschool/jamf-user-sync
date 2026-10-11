@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.2](https://github.com/woodleighschool/jamf-user-sync/compare/v3.0.1...v3.0.2) (2026-10-11)
+
+
+### Bug Fixes
+
+* **build:** unify Go toolchain and license tool versions ([e010456](https://github.com/woodleighschool/jamf-user-sync/commit/e01045622b96088795664ba3c5e032db67d2c019))
+* **go:** update module github.com/go-ldap/ldap/v3 (v3.4.14 → v3.4.15) ([#21](https://github.com/woodleighschool/jamf-user-sync/issues/21)) ([b79f116](https://github.com/woodleighschool/jamf-user-sync/commit/b79f1160e0bc400d662659febf212045c2fe7101))
+
 ## [3.0.1](https://github.com/woodleighschool/jamf-user-sync/compare/v3.0.0...v3.0.1) (2026-10-03)
 
 
