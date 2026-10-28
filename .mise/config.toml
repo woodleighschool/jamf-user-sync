@@ -63,10 +63,7 @@ run = "rm -f jamf-user-sync coverage.out && rm -rf dist"
 
 [tasks.workflow-lint]
 description = "Lint GitHub workflows"
-run = [
-  "actionlint -shellcheck= -ignore 'label \"ubuntu-26[.]04(-arm)?\" is unknown'",
-  "zizmor --offline .github/workflows",
-]
+run = "jactionlint --shellcheck="
 
 [tasks.container-check]
 description = "Build the production container locally"
