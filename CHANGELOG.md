@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.3](https://github.com/woodleighschool/jamf-user-sync/compare/v3.0.2...v3.0.3) (2026-11-07)
+
+
+### Bug Fixes
+
+* **go:** update module github.com/caarlos0/env/v11 (v11.4.1 → v11.4.2) ([#50](https://github.com/woodleighschool/jamf-user-sync/issues/50)) ([20500c7](https://github.com/woodleighschool/jamf-user-sync/commit/20500c7e96a5afcf0c2373c6efbe125db66236f2))
+* **go:** update module github.com/spf13/pflag (v1.0.10 → v1.1.0) ([#53](https://github.com/woodleighschool/jamf-user-sync/issues/53)) ([d783307](https://github.com/woodleighschool/jamf-user-sync/commit/d7833079e1c5294cc2a973221112c1ead51ea5e0))
+
 ## [3.0.2](https://github.com/woodleighschool/jamf-user-sync/compare/v3.0.1...v3.0.2) (2026-10-22)
 
 
