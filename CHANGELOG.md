@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.4](https://github.com/woodleighschool/jamf-user-sync/compare/v3.0.3...v3.0.4) (2026-11-27)
+
+
+### Bug Fixes
+
+* **go:** update module github.com/deploymenttheory/go-sdk-jamfpro-v2 (v0.17.0 → v0.18.0) ([#62](https://github.com/woodleighschool/jamf-user-sync/issues/62)) ([1b6c997](https://github.com/woodleighschool/jamf-user-sync/commit/1b6c9973cfb1c8ec3dd2f49c3e36cdf4657d0e92))
+
 ## [3.0.3](https://github.com/woodleighschool/jamf-user-sync/compare/v3.0.2...v3.0.3) (2026-11-11)
 
 
